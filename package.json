@@ -16,10 +16,12 @@
     "firebase-admin": "^9.4.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
-    "twin-bcrypt": "^2.1.1"
+    "twin-bcrypt": "^2.1.1",
+    "unirest": "^0.6.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
