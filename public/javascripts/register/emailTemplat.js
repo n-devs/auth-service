@@ -1,0 +1,3 @@
+function emailTemplat (email) {
+    return ``
+}
