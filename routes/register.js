@@ -1,11 +1,12 @@
 const express = require('express');
 const arj = require('api-response-json');
-const firebase = require('../../../sdk-connect/firebase');
-const mailer = require('../../../sdk-connect/mailer');
+const firebase = require('../sdk-connect/firebase');
+const mailer = require('../sdk-connect/mailer');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const unirest = require("unirest");
 const TwinBcrypt = require('twin-bcrypt');
+const emailBlackboardTemplat = require('../public/javascripts/emailBlackboardTemplat')
 
 
 
@@ -15,7 +16,7 @@ function TypeOf(val) {
     return typeof val === "undefined" ? false : true
 }
 
-router.post(`auth/register`, function (req, res, next) {
+router.post(`/auth/register`, function (req, res, next) {
     const { name, email, password, password_conf } = req.body;
     const userCollect = firestore.collection("users");
     const authCollect = firestore.collection("authentication");
@@ -46,7 +47,8 @@ router.post(`auth/register`, function (req, res, next) {
                                     id: emailDoc.id,
                                     uid: userDoc.id,
                                     provider: "email",
-                                    email: email
+                                    email: email,
+                                    confirm: false
                                 }).then(function () {
                                     let sessionID = authCollect.doc(userDoc.id).collection("status").doc(req.sessionID);
                                     let authLog = authCollect.doc(userDoc.id).collection("_log").doc(`signup-${req.sessionID}`);
@@ -111,21 +113,20 @@ router.post(`auth/register`, function (req, res, next) {
 
                                     mailer.sendMail({
                                         from: '"Blackboard" <support@blackboardapp.co>', // sender address
-                                        to:`${email}`, // list of receivers
-                                        subject: "Wellcom to blackboard", // Subject line
-                                        text: "Hello world?", // plain text body
-                                        html: "<b>Hello world?</b>", // html body
+                                        to: `${email}`, // list of receivers
+                                        subject: "Register Blackboard Confirm Email", // Subject line
+                                        html: emailBlackboardTemplat(emailDoc.id, email, name), // html body
                                     })
 
                                     arj.ok(res, true, "ok", {
-                                        access_token:token,
-                                        data:{
+                                        access_token: token,
+                                        data: {
                                             id: userDoc.id,
                                             name: req.user.displayName,
                                             email: email,
                                             email_id: emailDoc.id,
                                         }
-                                       
+
                                     })
                                 })
 
@@ -149,4 +150,6 @@ router.post(`auth/register`, function (req, res, next) {
         }
 
     }
-})
+});
+
+module.exports = router;

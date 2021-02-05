@@ -1,7 +1,7 @@
 var serviceAccount = require("../config/email/ServiceAccountKey.json");
 const nodemailer = require("nodemailer");
 
-module.exports = mailer = nodemailer.createTestAccount({
+module.exports = mailer = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,

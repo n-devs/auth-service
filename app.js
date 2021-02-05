@@ -3,12 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var facebookRouter = require('./public/javascripts/auth_facebook/index')
+var facebookRouter = require('./routes/auth-facebook')
+var confirmEmailRouter = require('./routes/blackboard-confirm-email')
 const session = require('express-session');
 const passport = require('passport');
 const apiSdk = require('./test-sdk')
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -20,7 +21,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   resave: false,
   saveUninitialized: true,
@@ -38,7 +39,7 @@ passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
-app.use('/', [facebookRouter]);
+app.use('/', [facebookRouter,confirmEmailRouter]);
 // app.use('/users', usersRouter);
 app.use('/api', [facebookRouter]);
 

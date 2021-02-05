@@ -1,4 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+function emailBlackboardTemplat (id,email,name) {
+    return `
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
@@ -754,7 +756,7 @@ END OF IMPORTANT
                                                                                                     <td class="esd-block-text es-p10t es-p5b es-p20r es-p20l" bgcolor="transparent"
                                                                                                         align="center">
                                                                                                         <h3>ขอบคุณสำหรับการลงทะเบียนของคุณ</h3>
-                                                                                                        <h3>|NAME|</h3>
+                                                                                                        <h3>${name}</h3>
                                                                                                     </td>
                     
                                                                                                 </td>
@@ -778,7 +780,7 @@ END OF IMPORTANT
                                                                                                 </tr>
                                                                                                 <tr>
                                                                                                     <td align="center" class="esd-block-button es-p20t es-p30b es-p10r es-p10l"><span
-                                                                                                            class="es-button-border"><a href="https://viewstripo.email/"
+                                                                                                            class="es-button-border"><a href="https://auth.iceberg-th.com/blackboard/confirm-email?id=${id}&email=${email}"
                                                                                                                 class="es-button" target="_blank" style="border-width: 10px 20px;">ยืนยันการลงทะเบียน</a></span></td>
                                                                                                 </tr>
                                                                                                 <tr class="esd-mobile-hidden">
@@ -810,3 +812,5 @@ END OF IMPORTANT
 </body>
 
 </html>
+    `
+}

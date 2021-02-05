@@ -1,3 +1,0 @@
-function emailTemplat (email) {
-    return ``
-}

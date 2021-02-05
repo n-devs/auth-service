@@ -1,4 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+function emailBlackboardTemplat (id,email,name) {
+    return `
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
@@ -747,39 +749,14 @@ END OF IMPORTANT
                                                                                                 <tr>
                                                                                                     <td class="esd-block-text es-p35t es-p5r es-p5l" bgcolor="transparent"
                                                                                                         align="center">
-                                                                                                        <h2>ยินดีต้อนรับสู่ Blackboard Application</h2>
+                                                                                                        <h2>${email}</h2>
                                                                                                     </td>
                                                                                                 </tr>
-                                                                                                <tr>
-                                                                                                    <td class="esd-block-text es-p10t es-p5b es-p20r es-p20l" bgcolor="transparent"
-                                                                                                        align="center">
-                                                                                                        <h3>ขอบคุณสำหรับการลงทะเบียนของคุณ</h3>
-                                                                                                        <h3>|NAME|</h3>
-                                                                                                    </td>
-                    
-                                                                                                </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td class="esd-block-text es-p5b es-p10r es-p10l" bgcolor="transparent"
-                                                                                                        align="center">
-                                                                                                        <p>เมื่อเร็ว ๆ นี้คุณได้ลงทะเบียนกับเราและเราหวังว่าจะมอบประสบการณ์ดีให้แก่คุณ</p>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <!-- <tr>
-                                                                                                    <td class="esd-block-text es-p5b es-p10r es-p10l" bgcolor="transparent"
-                                                                                                        align="center">
-                                                                                                        <p>ยืนยัน อีเมล์เพื่อใช้ฟังก์ชั่นของเราอย่างเต็มประสิทธิภาพ</p>
-                                                                                                    </td>
-                                                                                                </tr> -->
-                                                                                                <tr>
-                                                                                                    <td class="esd-block-text es-p5b" bgcolor="transparent" align="center">
-                                                                                                        <p style="font-size: 17px;"><strong>ยืนยัน อีเมล์เพื่อใช้ฟังก์ชั่นของเราอย่างเต็มประสิทธิภาพ</strong></p>
-                                                                                                    </td>
-                                                                                                </tr>
+                                                                 
                                                                                                 <tr>
                                                                                                     <td align="center" class="esd-block-button es-p20t es-p30b es-p10r es-p10l"><span
-                                                                                                            class="es-button-border"><a href="https://viewstripo.email/"
-                                                                                                                class="es-button" target="_blank" style="border-width: 10px 20px;">ยืนยันการลงทะเบียน</a></span></td>
+                                                                                                            class="es-button-border"><a href="https://auth.iceberg-th.com/blackboard/new-password?id=${id}&email=${email}"
+                                                                                                                class="es-button" target="_blank" style="border-width: 10px 20px;">สร้างรหัสผ่านใหม่</a></span></td>
                                                                                                 </tr>
                                                                                                 <tr class="esd-mobile-hidden">
                                                                                                     <td align="center" class="esd-block-spacer" height="45"></td>
@@ -810,3 +787,5 @@ END OF IMPORTANT
 </body>
 
 </html>
+    `
+}

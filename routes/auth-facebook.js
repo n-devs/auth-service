@@ -1,15 +1,15 @@
 const express = require('express');
 const passport = require('passport');
 const arj = require('api-response-json');
-const firebase = require('../../../sdk-connect/firebase');
-const facebookServiceAccount = require('../../../config/facebook/ServiceAccountKey.json');
-// const rapidapiServiceAccount = require('../../../config/rapidapi/ServiceAccountKey.json');
+const firebase = require('../sdk-connect/firebase');
+const facebookServiceAccount = require('../config/facebook/ServiceAccountKey.json');
+// const rapidapiServiceAccount = require('../config/rapidapi/ServiceAccountKey.json');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const jwt = require('jsonwebtoken');
 const unirest = require("unirest");
 const router = express.Router();
 
-// const facebook =require('../../../sdk-connect/facebook');
+// const facebook =require('../sdk-connect/facebook');
 const firestore = firebase.firestore()
 
 passport.use(new FacebookStrategy({ ...facebookServiceAccount }, function (accessToken, refreshToken, profile, done) {
