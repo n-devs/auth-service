@@ -5,6 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var facebookRouter = require('./routes/auth-facebook')
 var confirmEmailRouter = require('./routes/blackboard-confirm-email')
+var forgotEmailRouter = require('./routes/blackboard-forgot-password')
+var newPasswordRouter = require('./routes/blackboard-new-password')
+
 const session = require('express-session');
 const passport = require('passport');
 const apiSdk = require('./test-sdk')
@@ -39,7 +42,7 @@ passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
-app.use('/', [facebookRouter,confirmEmailRouter]);
+app.use('/', [facebookRouter,confirmEmailRouter,newPasswordRouter,forgotEmailRouter]);
 // app.use('/users', usersRouter);
 app.use('/api', [facebookRouter]);
 
