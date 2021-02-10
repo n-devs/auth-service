@@ -7,6 +7,7 @@ var facebookRouter = require('./routes/auth-facebook')
 var confirmEmailRouter = require('./routes/blackboard-confirm-email')
 var forgotEmailRouter = require('./routes/blackboard-forgot-password')
 var newPasswordRouter = require('./routes/blackboard-new-password')
+var authFirebaseRouter = require('./routes/auth-firebase')
 
 const session = require('express-session');
 const passport = require('passport');
@@ -42,7 +43,7 @@ passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
-app.use('/', [facebookRouter,confirmEmailRouter,newPasswordRouter,forgotEmailRouter]);
+app.use('/', [facebookRouter,confirmEmailRouter,newPasswordRouter,forgotEmailRouter,authFirebaseRouter]);
 // app.use('/users', usersRouter);
 app.use('/api', [facebookRouter]);
 

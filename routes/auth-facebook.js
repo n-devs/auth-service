@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const arj = require('api-response-json');
-const firebase = require('../sdk-connect/firebase');
+const firebase = require('../sdk-connect/firebase-admin');
 const facebookServiceAccount = require('../config/facebook/ServiceAccountKey.json');
 // const rapidapiServiceAccount = require('../config/rapidapi/ServiceAccountKey.json');
 const FacebookStrategy = require('passport-facebook').Strategy;
