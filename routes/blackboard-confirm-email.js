@@ -1,6 +1,6 @@
 const express = require('express');
 const arj = require('api-response-json');
-const firebase = require('../sdk-connect/firebase');
+const firebase = require('../sdk-connect/firebase-admin');
 const mailer = require('../sdk-connect/mailer');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
