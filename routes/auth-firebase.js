@@ -9,12 +9,10 @@ const admin = require('../sdk-connect/firebase-admin');
 // const jwt = require('jsonwebtoken');
 // const unirest = require("unirest");
 const router = express.Router();
+const firestore = admin.firestore()
 
-// const facebook =require('../sdk-connect/facebook');
-// const firestore = firebase.firestore()
-router.get('/example/auth/firebase', function (req, res) {
-res.render('auth-firebase.ejs')
-})
+const userCollect = firestore.collection("users");
+
 router.post('/api/auth/firebase/email/signin', function (req, res) {
   const { email, password } = req.body;
   console.log("email", typeof email);
@@ -36,31 +34,69 @@ router.post('/api/auth/firebase/email/signin', function (req, res) {
         .then((userCredential) => {
           // Signed in
           var user = userCredential.user;
+          let userDoc = userCollect.doc(user.uid);
           admin
             .auth()
             .createCustomToken(user.uid)
             .then((customToken) => {
               // Send token back to client
-              console.log("user", user);
-              arj.ok(res, true, "ok", {
-                // J: user.J,
-                // l: user.l,
-                // m: user.m,
-                // za: user.za,
-                // _lat: user._lat,
-                access_token: customToken,
-                // refreshToken: user.refreshToken,
-                uid: user.uid,
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-                email: user.email,
-                emailVerified: user.emailVerified,
-                phoneNumber: user.phoneNumber,
-                isAnonymous: user.isAnonymous,
-                tenantId: user.tenantId,
-                metadata: user.metadata,
-                providerData: user.providerData
+              // console.log("user", user);
+              userDoc.get().then(function (_userDoc) {
+
+                if (_userDoc.exists) {
+                  arj.ok(res, true, "ok", {
+                    // J: user.J,
+                    // l: user.l,
+                    // m: user.m,
+                    // za: user.za,
+                    // _lat: user._lat,
+                    access_token: customToken,
+                    // refreshToken: user.refreshToken,
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    email: user.email,
+                    emailVerified: user.emailVerified,
+                    phoneNumber: user.phoneNumber,
+                    isAnonymous: user.isAnonymous,
+                    tenantId: user.tenantId,
+                    metadata: user.metadata,
+                    providerData: user.providerData
+                  })
+                } else {
+                  userDoc.set({
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    email: user.email,
+                    // emailVerified: user.emailVerified,
+                    phoneNumber: user.phoneNumber,
+                    // isAnonymous: user.isAnonymous,
+                    // tenantId: user.tenantId
+                  }).then(function () {
+                    arj.created(res, true, "created", {
+                      // J: user.J,
+                      // l: user.l,
+                      // m: user.m,
+                      // za: user.za,
+                      // _lat: user._lat,
+                      access_token: customToken,
+                      // refreshToken: user.refreshToken,
+                      uid: user.uid,
+                      displayName: user.displayName,
+                      photoURL: user.photoURL,
+                      email: user.email,
+                      emailVerified: user.emailVerified,
+                      phoneNumber: user.phoneNumber,
+                      isAnonymous: user.isAnonymous,
+                      tenantId: user.tenantId,
+                      metadata: user.metadata,
+                      providerData: user.providerData
+                    })
+                  })
+                }
               })
+
             })
             .catch((error) => {
               arj.unauthorized(res, false, "Error creating custom token", {
@@ -87,55 +123,81 @@ router.post('/api/auth/firebase/email/signin', function (req, res) {
 
 });
 
-router.post('/api/auth/firebase/google/signin', function (req, res) {
-  const { id_token } = req.body;
-  var credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+router.post('/api/auth/firebase/signin', function (req, res) {
+  const { uid } = req.body;
+  admin
+    .auth()
+    .createCustomToken(uid)
+    .then((customToken) => {
+      firebase.auth().signInWithCustomToken(customToken).then((userCredential) => {
+        var user = userCredential.user;
+        let userDoc = userCollect.doc(user.uid);
 
-  console.log(credential);
-  // Sign in with credential from the Google user.
-  firebase.auth().signInWithCredential(credential).then((userCredential) => {
-    // Signed in
-    var user = userCredential.user;
-    admin
-      .auth()
-      .createCustomToken(user.uid)
-      .then((customToken) => {
-        // Send token back to client
-        console.log("user", user);
-        arj.ok(res, true, "ok", {
-          // J: user.J,
-          // l: user.l,
-          // m: user.m,
-          // za: user.za,
-          // _lat: user._lat,
-          access_token: customToken,
-          // refreshToken: user.refreshToken,
-          uid: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          email: user.email,
-          emailVerified: user.emailVerified,
-          phoneNumber: user.phoneNumber,
-          isAnonymous: user.isAnonymous,
-          tenantId: user.tenantId,
-          metadata: user.metadata,
-          providerData: user.providerData
-        })
-      }).catch((error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        // ...
+        userDoc.get().then(function (_userDoc) {
 
-        arj.unauthorized(res, false, "Error creating custom token", {
-          error: error
+          if (_userDoc.exists) {
+            arj.ok(res, true, "ok", {
+              // J: user.J,
+              // l: user.l,
+              // m: user.m,
+              // za: user.za,
+              // _lat: user._lat,
+              access_token: customToken,
+              // refreshToken: user.refreshToken,
+              uid: user.uid,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              email: user.email,
+              emailVerified: user.emailVerified,
+              phoneNumber: user.phoneNumber,
+              isAnonymous: user.isAnonymous,
+              tenantId: user.tenantId,
+              metadata: user.metadata,
+              providerData: user.providerData
+            })
+          } else {
+            userDoc.set({
+              uid: user.uid,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              email: user.email,
+              // emailVerified: user.emailVerified,
+              phoneNumber: user.phoneNumber,
+              // isAnonymous: user.isAnonymous,
+              // tenantId: user.tenantId
+            }).then(function () {
+              arj.created(res, true, "created", {
+                // J: user.J,
+                // l: user.l,
+                // m: user.m,
+                // za: user.za,
+                // _lat: user._lat,
+                access_token: customToken,
+                // refreshToken: user.refreshToken,
+                uid: user.uid,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                email: user.email,
+                emailVerified: user.emailVerified,
+                phoneNumber: user.phoneNumber,
+                isAnonymous: user.isAnonymous,
+                tenantId: user.tenantId,
+                metadata: user.metadata,
+                providerData: user.providerData
+              })
+            })
+          }
         })
-      });
-  });
+      })
+      // Send token back to client
+
+    })
+    .catch((error) => {
+      arj.unauthorized(res, false, "Error creating custom token", {
+        error: error
+      })
+      console.log('Error creating custom token:', error);
+    });
 })
 
 router.post('/api/auth/firebase/email/signup', function (req, res) {
@@ -163,33 +225,46 @@ router.post('/api/auth/firebase/email/signup', function (req, res) {
         .then((userCredential) => {
           // Signed in 
           var user = userCredential.user;
-
+          let userDoc = userCollect.doc(user.uid);
           admin
             .auth()
             .createCustomToken(user.uid)
             .then((customToken) => {
-              arj.created(res, true, "created", {
-                // J: user.J,
-                // l: user.l,
-                // m: user.m,
-                // za: user.za,
-                // _lat: user._lat,
-                access_token: customToken,
-                // refreshToken: user.refreshToken,
+              userDoc.set({
                 uid: user.uid,
                 displayName: user.displayName,
                 photoURL: user.photoURL,
                 email: user.email,
-                emailVerified: user.emailVerified,
+                // emailVerified: user.emailVerified,
                 phoneNumber: user.phoneNumber,
-                isAnonymous: user.isAnonymous,
-                tenantId: user.tenantId,
-                metadata: user.metadata,
-                providerData: user.providerData
+                // isAnonymous: user.isAnonymous,
+                // tenantId: user.tenantId
+              }).then(function () {
+                arj.created(res, true, "created", {
+                  // J: user.J,
+                  // l: user.l,
+                  // m: user.m,
+                  // za: user.za,
+                  // _lat: user._lat,
+                  access_token: customToken,
+                  // refreshToken: user.refreshToken,
+                  uid: user.uid,
+                  displayName: user.displayName,
+                  photoURL: user.photoURL,
+                  email: user.email,
+                  emailVerified: user.emailVerified,
+                  phoneNumber: user.phoneNumber,
+                  isAnonymous: user.isAnonymous,
+                  tenantId: user.tenantId,
+                  metadata: user.metadata,
+                  providerData: user.providerData
+                })
               })
+
 
               firebase.auth().currentUser.sendEmailVerification()
                 .then(() => {
+                  console.log("Email verification sent!");
                   // arj.ok(res, true, "ok", {})
                   // Email verification sent!
                   // ...
@@ -270,7 +345,10 @@ router.post('/api/auth/firebase/update/email', function (req, res) {
     // var user = userCredential.user;
     firebase.auth().updateEmail(email).then(function () {
       // Update successful.
-      arj.ok(res, true, "update email ok.", {})
+      userDoc.update({ email: email }).then(function () {
+        arj.ok(res, true, "update email ok.", {})
+      })
+
     }).catch(function (error) {
       // An error happened.
       arj.unauthorized(res, false, "update email error.", {})
@@ -287,15 +365,38 @@ router.put('/api/auth/firebase/update/profile', function (req, res) {
   // console.log(email, token);
   firebase.auth().signInWithCustomToken(token).then((userCredential) => {
     // Signed in
-    // var user = userCredential.user;
+    var user = userCredential.user;
+    let userDoc = userCollect.doc(user.uid);
     firebase.auth().currentUser.updateProfile({ ...req.body }).then(function () {
       // Update successful.
-      arj.ok(res, true, "profile update ok.", {})
+      userDoc.update({ ...req.body }).then(function () {
+        arj.ok(res, true, "profile update ok.", {})
+      })
+
     }).catch(function (error) {
       // An error happened.
       arj.unauthorized(res, false, "profile update error.", {})
     });
     // console.log(user);
+  })
+})
+
+router.get('/api/auth/firebase/profile', function (req, res) {
+  // Admin SDK API to generate the password reset link.
+  const token = req.headers['access_token'];
+  // const { email } = req.body;
+  // console.log(email, token);
+  firebase.auth().signInWithCustomToken(token).then((userCredential) => {
+    // Signed in
+    var _user = userCredential.user;
+    const user = firebase.auth().currentUser;
+    console.log(user);
+    if (user != null) {
+
+      arj.ok(res, true, "ok.", { ...user })
+    } else {
+      arj.unauthorized(res, false, "profileerror.", {})
+    }
   })
 })
 
@@ -350,9 +451,5 @@ router.delete('/api/auth/firebase/signout', function (req, res) {
   })
 
 })
-
-
-
-
 
 module.exports = router;
